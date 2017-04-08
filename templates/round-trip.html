@@ -1,0 +1,39 @@
+<!--TODO RETURN DATE -->
+{% extends 'default.html' %}
+
+
+{% block main %}
+<div class=" row center">
+    <br>
+    <h3> Round Trip </h3>
+    <div class="row">
+        <form id="purchase-form" class="col s6 offset-s3" method="post" action="#">
+
+              <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field inline col s6"> Departure Date
+          <input id="departure-date" type="date" class="validate">
+        </div>
+        <div class="input-field inline col s6"> Departure Time
+          <input id="departure-time" type="time" class="validate">
+        </div>
+      </div>
+
+        <div class="row">
+        <div class="input-field inline col s6"> Return Date
+          <input id="return-date" type="date" class="validate">
+        </div>
+        <div class="input-field inline col s6"> Return Time
+          <input id="return-time" type="time" class="validate">
+        </div>
+      </div>
+    </form>
+  </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+
+
