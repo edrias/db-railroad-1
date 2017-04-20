@@ -1,0 +1,44 @@
+{% extends 'default.html' %}
+
+
+{% block main %}
+<div class=" row center">
+    <br>
+    <h3> Round Trip </h3>
+    <div class="row">
+        <form id="purchase-form" class="col s6 offset-s3" method="post" action="/purchase-action">
+            <div class="row">
+                <div class="input-field inline col s6"> First Name *
+                    <input name='fname' type="text">
+                </div>
+                <div class=" input-field inline col s6"> Last Name *
+                    <input name="lname" type="text">
+                </div>
+
+                <div class=" input-field inline col s12"> E-mail *
+                    <input name="email" type="email">
+                </div>
+
+                 <div class=" input-field inline col s12"> Billing Address *
+                    <input name="addr" type="text">
+                </div>
+
+                <div class=" input-field inline col s12"> Credit Card *
+                    <input name="payment" type="number">
+                </div>
+
+            </div>
+
+            <!--TODO - set a extra thing for multiple tickets passenger information-->
+            <button class="btn waves-effect waves-light" type="submit" name="action">PURCHASE
+            </button>
+
+        </form>
+    </div>
+    </form>
+</div>
+
+</div>
+{% endblock %}
+
+

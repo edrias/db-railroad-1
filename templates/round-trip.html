@@ -1,4 +1,3 @@
-<!--TODO RETURN DATE -->
 {% extends 'default.html' %}
 
 
@@ -7,7 +6,7 @@
     <br>
     <h3> Round Trip </h3>
     <div class="row">
-        <form id="purchase-form" class="col s6 offset-s3" method="post" action="#">
+        <form id="purchase-form" class="col s6 offset-s3" method="post" action="/round-trip-action">
 
             <div class="row">
 
@@ -17,10 +16,10 @@
                         <h5> Departing Date </h5>
 
                         <div class="input-field inline col s6"> Departure Date
-                            <input id="departure-date" type="date" class="validate">
+                            <input id="departure-date" type="date" class="validate" name = 'departure-date'>
                         </div>
                         <div class="input-field inline col s6"> Departure Time
-                            <input id="departure-time" type="time" class="validate">
+                            <input id="departure-time" name="departure-time" type="time" class="validate">
                         </div>
                     </div>
 
@@ -28,10 +27,10 @@
 
                     <!--date time info-->
                     <div class="input-field inline col s6"> Return Date
-                        <input id="return-date" type="date" class="validate">
+                        <input id="return-date" name="return-date" type="date" class="validate">
                     </div>
                     <div class="input-field inline col s6"> Return Time
-                        <input id="return-time" type="time" class="validate">
+                        <input id="return-time" name="return-time" type="time" class="validate">
                     </div>
 
 
@@ -39,7 +38,7 @@
                     <!--Location SElections Departure-->
                     <div class=" col s6">
                         <label> From</label>
-                        <select class="browser-default">
+                        <select  name="from-station" class="browser-default">
                             <option value="" disabled selected>Select Station</option>
                             <option value="1">Option 1</option>
                             <option value="2">Option 2</option>
@@ -48,14 +47,17 @@
                     </div>
                     <div class=" col s6">
                         <label> To</label>
-                        <select class="browser-default">
+                        <select name="to-station"  class="browser-default">
                             <option value="" disabled selected>Select Station</option>
                             <option value="1">Option 1</option>
                             <option value="2">Option 2</option>
                             <option value="3">Option 3</option>
                         </select>
                     </div>
+<br>
 
+ <button class="btn waves-effect waves-light" type="submit" name="action">OK
+  </button>
 
                 </form>
             </div>
