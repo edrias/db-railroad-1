@@ -1,3 +1,2 @@
 Flask==0.12.1
 Flask-MySQL==1.4.0
-FLASK-WTF==0.14.2
