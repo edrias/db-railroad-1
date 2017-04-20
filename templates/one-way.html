@@ -6,7 +6,7 @@
     <br>
     <h3> Purchase a One Way Ticket </h3>
     <div class="row">
-        <form id="purchase-form" class="col s6 offset-s3" method="post" action="#">
+        <form id="purchase-form" class="col s6 offset-s3" action="oneway-action" method="post" >
 
             <div class="row">
                 <form class="col s12">
@@ -42,9 +42,9 @@
 
                     <br>
 
- <button class="btn waves-effect waves-light" type="submit" name="action">OK
+ <button id= "onewaybtn" class="btn waves-effect waves-light" type="submit">OK
   </button>
-
+{{ form.csrf_token }}
 
         </form>
     </div>
