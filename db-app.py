@@ -52,5 +52,21 @@ def round_trip_act():
         return "result template"
 
 
+@app.route('/purchase/')
+def purchase_tkt():
+    return render_template('purchase.html')
+
+
+@app.route('/purchase-action', methods=['POST'])
+def purchase_act():
+    if request.method=='POST':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        email = request.form['email']
+        billing_addr = request.form['addr']
+        credit_card = request.form['payment']
+        print (fname+ lname+ email+billing_addr )
+    return "purchased!"
+
 if __name__ == "__main__":
     app.run()
