@@ -1,9 +1,13 @@
 from flask import Flask,render_template,request, url_for, redirect
 app = Flask(__name__)
 
+my_str = input("one way or round trip?")
+print (my_str)
+
 @app.route("/")
 @app.route('/<path>')
 def main():
+    my_str = input("one way or round trip?")
     return render_template('index.html')
 
 
