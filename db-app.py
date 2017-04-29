@@ -48,11 +48,16 @@ def one_way_act():
         _destination_station = request.form['to-station'] #can be the station symbol
 
         # PROCESS VALUES HERE FOR QUERIES
-    return "result template"
+        trip_found = False
+        results = []
+        # if TRIP is found from query, chane trip found to TURUE
+        return render_template('results.html', found = trip_found, results = results)
 
 
 @app.route('/round-trip/')
 def round_trip():
+    #page that renders the round trip form-
+    # results of the form are retrieved in round_trip_act()
     return render_template('round-trip.html')
 
 
@@ -75,18 +80,24 @@ def round_trip_act():
 
 @app.route('/purchase/')
 def purchase_tkt():
-    return render_template('purchase.html')
+    if request.method == 'POST':
+        result = request.form['book_button']  # result type - still need to be defined
+        #page that has the form- once form is submitted - goes to purchase act
+        return render_template('purchase.html', result = result)
 
 
 @app.route('/purchase-action', methods=['POST'])
 def purchase_act():
     if request.method=='POST':
+        trip_details = request.form['result'] # TODO need to pass the trip details into the purchase
         fname = request.form['fname'] #str
         lname = request.form['lname'] #str
         email = request.form['email'] #email
         billing_addr = request.form['addr'] #str
         credit_card = request.form['payment'] #number
-    return "purchased!"
+
+        return "Purchsed Template"
+
 
 if __name__ == "__main__":
     app.run()
