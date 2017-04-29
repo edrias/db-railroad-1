@@ -1,7 +1,6 @@
 from flask import Flask,render_template,request, url_for, redirect
 app = Flask(__name__)
 
-
 def book_trip_term():
     my_str = input("one way or round trip?")
     if my_str == "one_way":
@@ -14,6 +13,7 @@ def book_trip_term():
         # SEE round_trip_act() function below
         input_from_form =input("round trip input")
     else:
+        t = False
         return
 
 
@@ -24,13 +24,13 @@ def book_ticket():
     # create new passengers
     # reduce the seats free and etc
 
+# book_trip_term(terminal)
 
-book_trip_term()
 
 @app.route("/")
-@app.route('/<path>')
+# @app.route('/<path>')
 def main():
-    my_str = input("one way or round trip?")
+    # my_str = input("one way or round trip?")
     return render_template('index.html')
 
 
