@@ -28,16 +28,17 @@ def book_ticket():
 
 
 @app.route("/")
-# @app.route('/<path>')
+@app.route('/<path>')
 def main():
     # my_str = input("one way or round trip?")
     return render_template('index.html')
 
 
-#@app.route('/one-way/<path>',methods=["GET","POST"])
+#@app.route('/one-way/<path>')
 @app.route('/one-way/')
 def one_way():
     return render_template('one-way.html')
+
 
 @app.route('/oneway-action',methods=["POST"])
 def one_way_act():
@@ -52,6 +53,7 @@ def one_way_act():
         results = []
         # if TRIP is found from query, chane trip found to TURUE
         return render_template('results.html', found = trip_found, results = results)
+    return "Oops you can't access this page"
 
 
 @app.route('/round-trip/')
@@ -74,16 +76,21 @@ def round_trip_act():
 
         # PROCESS VALUES HERE
         #put results into results list as a type (perhaps results type)
+        trip_found = False
+
         results = []
-        return render_template('results.html',results = results)
+        return render_template('results.html',found= trip_found,results = results)
+    return "Oops you can't access this page"
 
 
 @app.route('/purchase/')
 def purchase_tkt():
+    # USERS will only be redirected to this page from selecting a trip - otherwise inaacessible page
     if request.method == 'POST':
         result = request.form['book_button']  # result type - still need to be defined
         #page that has the form- once form is submitted - goes to purchase act
         return render_template('purchase.html', result = result)
+    return "Oops you can't access this page"
 
 
 @app.route('/purchase-action', methods=['POST'])
@@ -97,7 +104,7 @@ def purchase_act():
         credit_card = request.form['payment'] #number
 
         return "Purchsed Template"
-
+    return "Oops you can't access this page"
 
 if __name__ == "__main__":
     app.run()
