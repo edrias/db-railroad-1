@@ -1,0 +1,39 @@
+{% extends 'default.html' %}
+
+
+{% block main %}
+
+
+{% if found %}
+{% for result in results %}
+<div class="row">
+    <div class="col s10">
+
+    </div>
+    <div class="col s2">
+        <form id="pick-ticket" method="post" action="/purchase-action">
+            <button class="waves-effect waves-light btn" type="submit"
+                    name='book_button' value="{{ result }}">
+                BOOK
+            </button>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+
+{% endfor %}
+
+
+
+{% else %}
+
+<div class="row">
+    <center><h1> No matches found </h1></center>
+</div>
+
+{% endif %}
+{% endblock %}
+
+
