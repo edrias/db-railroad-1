@@ -34,7 +34,7 @@ def main():
     return render_template('index.html')
 
 
-#@app.route('/one-way/<path>')
+@app.route('/one-way/<path>')
 @app.route('/one-way/')
 def one_way():
     return render_template('one-way.html')
