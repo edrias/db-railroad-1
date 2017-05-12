@@ -1,5 +1,12 @@
+import os
+import sqlite3
 from flask import Flask,render_template,request, url_for, redirect
 app = Flask(__name__)
+
+conn = sqlite3.connect("rail.db")
+sql_commander = conn.cursor()
+
+
 
 def book_trip_term():
     my_str = input("one way or round trip?")

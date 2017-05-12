@@ -6,6 +6,3 @@ threadsafe: true
 handlers:
 - url: .*
   script: db-app.app
-
-
-
