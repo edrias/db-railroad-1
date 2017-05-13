@@ -1,6 +1,37 @@
 import os
+import sqlite3
 from flask import Flask,render_template,request, url_for, redirect
 app = Flask(__name__)
+
+conn = sqlite3.connect("rail.db")
+sql_commander = conn.cursor()
+
+
+
+def book_trip_term():
+    my_str = input("one way or round trip?")
+    if my_str == "one_way":
+        input_from_form =input("one way input") #format it yourselves and parse the string for now
+        # SEE one_way_act()  function below
+        # your  mysql queries produce some result
+        # maybe make a new class that can store all of the information
+        # bc will need to display it all in the GUI
+    elif my_str == "round trip":
+        # SEE round_trip_act() function below
+        input_from_form =input("round trip input")
+    else:
+        t = False
+        return
+
+
+def book_ticket():
+    ticket_info = input("ticket info")
+    #SEE purchase_act() for values
+    # this will need to be a sql entry
+    # create new passengers
+    # reduce the seats free and etc
+
+# book_trip_term(terminal)
 
 
 @app.route("/")
