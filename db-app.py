@@ -1,7 +1,10 @@
 import os
 from flask import Flask,render_template,request, url_for, redirect
+from models import db_query
+
 app = Flask(__name__)
 
+conn = db_query.db_connect()
 
 @app.route("/")
 @app.route('/<path>')
@@ -13,6 +16,7 @@ def main():
 @app.route('/one-way/<path>')
 @app.route('/one-way/')
 def one_way():
+    conn.
     return render_template('one-way.html')
 
 
