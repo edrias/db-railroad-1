@@ -1,19 +1,19 @@
-import os
 from flask import Flask,render_template,request, url_for, redirect
+from mods_c import  get_stations, get_passengers_table
+
 app = Flask(__name__)
 
 
 @app.route("/")
 @app.route('/<path>')
 def main():
-    # my_str = input("one way or round trip?")
     return render_template('index.html')
 
 
-@app.route('/one-way/<path>')
 @app.route('/one-way/')
 def one_way():
-    return render_template('one-way.html')
+    stations = get_stations()
+    return render_template('one-way.html',stations =stations)
 
 
 @app.route('/oneway-action',methods=["POST"])
@@ -21,8 +21,8 @@ def one_way_act():
     if request.method == "POST":
         _dep_date = request.form['departure-date'] #date type
         _dep_time = request.form['departure-time'] #time type
-        _outgoing_station = request.form['from-station'] #can be the station symbol
-        _destination_station = request.form['to-station'] #can be the station symbol
+        _outgoing_station = request.form['from-station'] # PASSED AS station symbol
+        _destination_station = request.form['to-station'] #PASSED as station symbol
 
         # PROCESS VALUES HERE FOR QUERIES
         trip_found = False
@@ -34,9 +34,10 @@ def one_way_act():
 
 @app.route('/round-trip/')
 def round_trip():
+    stations = get_stations()
     #page that renders the round trip form-
     # results of the form are retrieved in round_trip_act()
-    return render_template('round-trip.html')
+    return render_template('round-trip.html', stations= stations)
 
 
 @app.route('/round-trip-action', methods =['POST'])
@@ -81,6 +82,12 @@ def purchase_act():
 
         return "Purchsed Template"
     return "Oops you can't access this page"
+
+
+@app.route('/tables')
+def tables():
+    all_passengers = get_passengers_table()
+    return render_template('tables.html', passengers = all_passengers)
 
 if __name__ == "__main__":
     app.run()

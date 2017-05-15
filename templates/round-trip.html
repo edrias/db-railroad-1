@@ -39,19 +39,19 @@
                     <div class=" col s6">
                         <label> From</label>
                         <select  name="from-station" class="browser-default">
-                            <option value="" disabled selected>Select Station</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
+                             <option value="" disabled selected>Select Station</option>
+                                {% for station in stations %}
+                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                {% endfor %}
                         </select>
                     </div>
                     <div class=" col s6">
                         <label> To</label>
                         <select name="to-station"  class="browser-default">
-                            <option value="" disabled selected>Select Station</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
+                             <option value="" disabled selected>Select Station</option>
+                                {% for station in stations %}
+                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                {% endfor %}
                         </select>
                     </div>
 <br>

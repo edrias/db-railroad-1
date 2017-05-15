@@ -1,6 +1,6 @@
 import sqlite3 as sql
 
-with sql.connect("db-railroad.db") as con:
+with sql.connect("rail.db") as con:
     cur = con.cursor()
 
     cur.execute("DROP TABLE if EXISTS passengers")
@@ -146,9 +146,9 @@ with sql.connect("db-railroad.db") as con:
 
     # data for segments
     cur.execute("""INSERT INTO segments VALUES
-    (1,35,2,1.00),
-    (2,1,3,1.00),
-    (3,2,4,1.00),
+    (1,35,2,10.00),
+    (2,1,3,12.00),
+    (3,2,4,13.00),
     (4,3,5,1.00),
     (5,4,6,1.00),
     (6,5,7,1.00),
@@ -181,3 +181,4 @@ with sql.connect("db-railroad.db") as con:
     (33,32,34,1.00),
     (34,33,35,1.00),
     (35,34,1,1.00)""")
+
