@@ -2,7 +2,7 @@ import os
 from flask import Flask,render_template,request, url_for, redirect
 from models.db_query import db_connect
 import sqlite3
-from mods_c import  stations, make_stationsList
+from mods_c import  get_stations
 
 app = Flask(__name__)
 
@@ -16,10 +16,7 @@ def main():
 
 @app.route('/one-way/')
 def one_way():
-    db = sqlite3.connect('rail.db')
-    cursor = db.cursor()
-    cursor.execute('select station_name,station_symbol from stations')
-    stations = cursor.fetchall()
+    stations = get_stations()
     return render_template('one-way.html',stations =stations)
 
 
@@ -41,10 +38,7 @@ def one_way_act():
 
 @app.route('/round-trip/')
 def round_trip():
-    db = sqlite3.connect('rail.db')
-    cursor = db.cursor()
-    cursor.execute('select station_name,station_symbol from stations')
-    stations = cursor.fetchall()
+    stations = get_stations()
     #page that renders the round trip form-
     # results of the form are retrieved in round_trip_act()
     return render_template('round-trip.html', stations= stations)
