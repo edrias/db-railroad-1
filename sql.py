@@ -1,3 +1,4 @@
+import datetime as dt
 import sqlite3 as sql
 
 with sql.connect("rail.db") as con:
@@ -181,4 +182,12 @@ with sql.connect("rail.db") as con:
     (33,32,34,1.00),
     (34,33,35,1.00),
     (35,34,1,1.00)""")
+
+#Python script for seats free values
+    for i in range(1,2):
+        start_month = dt.datetime(2017,5,i)
+        for i in range(1,41): #for all trains - we can change this depending on how many trains we want.
+            for j in range(1,25):
+                cur.execute("INSERT INTO Seats_free values (%d,%d,'%s',%d);\n"%(i,j,start_month.strftime("%Y-%m-%d"),448))
+
 
