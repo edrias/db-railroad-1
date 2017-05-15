@@ -1,7 +1,4 @@
-import os
 from flask import Flask,render_template,request, url_for, redirect
-from models.db_query import db_connect
-import sqlite3
 from mods_c import  get_stations
 
 app = Flask(__name__)
@@ -10,7 +7,6 @@ app = Flask(__name__)
 @app.route("/")
 @app.route('/<path>')
 def main():
-    # my_str = input("one way or round trip?")
     return render_template('index.html')
 
 
