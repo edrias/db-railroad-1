@@ -2,6 +2,7 @@ import os
 from flask import Flask,render_template,request, url_for, redirect
 from models.db_query import db_connect
 import sqlite3
+from mods_c import  stations, make_stationsList
 
 app = Flask(__name__)
 
@@ -17,12 +18,9 @@ def main():
 def one_way():
     db = sqlite3.connect('rail.db')
     cursor = db.cursor()
-    # cursor.execute('select station_name from stations')
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    print ("*********" , cursor.fetchall())
-    # stations = cursor.fetchall()
-    # print (stations)
-    return render_template('one-way.html')
+    cursor.execute('select station_name,station_symbol from stations')
+    stations = cursor.fetchall()
+    return render_template('one-way.html',stations =stations)
 
 
 @app.route('/oneway-action',methods=["POST"])
@@ -30,8 +28,8 @@ def one_way_act():
     if request.method == "POST":
         _dep_date = request.form['departure-date'] #date type
         _dep_time = request.form['departure-time'] #time type
-        _outgoing_station = request.form['from-station'] #can be the station symbol
-        _destination_station = request.form['to-station'] #can be the station symbol
+        _outgoing_station = request.form['from-station'] # PASSED AS station symbol
+        _destination_station = request.form['to-station'] #PASSED as station symbol
 
         # PROCESS VALUES HERE FOR QUERIES
         trip_found = False
@@ -43,9 +41,13 @@ def one_way_act():
 
 @app.route('/round-trip/')
 def round_trip():
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute('select station_name,station_symbol from stations')
+    stations = cursor.fetchall()
     #page that renders the round trip form-
     # results of the form are retrieved in round_trip_act()
-    return render_template('round-trip.html')
+    return render_template('round-trip.html', stations= stations)
 
 
 @app.route('/round-trip-action', methods =['POST'])
