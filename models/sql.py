@@ -1,6 +1,6 @@
 import sqlite3 as sql
 
-with sql.connect("db-railroad.db") as con:
+with sql.connect("rail.db") as con:
     cur = con.cursor()
 
     cur.execute("DROP TABLE if EXISTS passengers")
@@ -181,3 +181,4 @@ with sql.connect("db-railroad.db") as con:
     (33,32,34,1.00),
     (34,33,35,1.00),
     (35,34,1,1.00)""")
+

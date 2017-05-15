@@ -1,10 +1,10 @@
 import os
 from flask import Flask,render_template,request, url_for, redirect
-from models import db_query
+from models.db_query import db_connect
+import sqlite3
 
 app = Flask(__name__)
 
-conn = db_query.db_connect()
 
 @app.route("/")
 @app.route('/<path>')
@@ -13,10 +13,15 @@ def main():
     return render_template('index.html')
 
 
-@app.route('/one-way/<path>')
 @app.route('/one-way/')
 def one_way():
-    conn.
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    # cursor.execute('select station_name from stations')
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    print ("*********" , cursor.fetchall())
+    # stations = cursor.fetchall()
+    # print (stations)
     return render_template('one-way.html')
 
 
