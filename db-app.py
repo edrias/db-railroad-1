@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request, url_for, redirect
-from mods_c import  get_stations
+from mods_c import  get_stations, get_passengers_table
 
 app = Flask(__name__)
 
@@ -82,6 +82,12 @@ def purchase_act():
 
         return "Purchsed Template"
     return "Oops you can't access this page"
+
+
+@app.route('/tables')
+def tables():
+    all_passengers = get_passengers_table()
+    return render_template('tables.html', passengers = all_passengers)
 
 if __name__ == "__main__":
     app.run()

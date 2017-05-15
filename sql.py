@@ -146,9 +146,9 @@ with sql.connect("rail.db") as con:
 
     # data for segments
     cur.execute("""INSERT INTO segments VALUES
-    (1,35,2,1.00),
-    (2,1,3,1.00),
-    (3,2,4,1.00),
+    (1,35,2,10.00),
+    (2,1,3,12.00),
+    (3,2,4,13.00),
     (4,3,5,1.00),
     (5,4,6,1.00),
     (6,5,7,1.00),

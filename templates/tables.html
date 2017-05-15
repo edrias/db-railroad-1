@@ -1,0 +1,96 @@
+{% extends 'default.html' %}
+
+
+{% block main %}
+
+<h2> Passengers Table</h2>
+<table class="bordered">
+    <thead>
+    <tr>
+        <th>passenger_id</th>
+        <th>lname</th>
+        <th>email</th>
+        <th>billing_addr</th>
+        <th>payment</th>
+
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        {% for passenger in passengers %}
+        <th> {{ passenger[0] }}</th>
+        <th> {{ passenger[1] }}</th>
+        <th> {{ passenger[2] }}</th>
+        <th> {{ passenger[3] }}</th>
+        <th> {{ passenger[4] }}</th>
+
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+
+<h2> Trips Table</h2>
+<table class="bordered">
+    <thead>
+    <tr>
+        <th>trip_id</th>
+        <th>trip_date</th>
+        <th>trip_start</th>
+        <th>trip_end</th>
+        <th>passenger_id</th>
+        <th>trip_fare</th>
+        <th>payment_method</th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        {% for trip in trips %}
+        <th> {{ trip[0] }}</th>
+        <th> {{ trip[1] }}</th>
+        <th> {{ trip[2] }}</th>
+        <th> {{ trip[3] }}</th>
+        <th> {{ trip[4] }}</th>
+        <th> {{ trip[5] }}</th>
+        <th> {{ trip[6] }}</th>
+
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+<br>
+
+<h2> Seats Free Table</h2>
+<table class="bordered">
+    <thead>
+    <tr>
+        <th>trip_num</th>
+        <th>sf_segment_id</th>
+        <th>sf_date</th>
+        <th>seats_free</th>
+
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        {% for x in sf %}
+        <th> {{ x[0] }}</th>
+        <th> {{ x[1] }}</th>
+        <th> {{ x[2] }}</th>
+        <th> {{ x[3] }}</th>
+
+
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+
+{% include 'scripts.html' %}
+
+{% endblock %}
+
