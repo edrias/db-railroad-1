@@ -1,4 +1,4 @@
-import datetime as dt
+from datetime import date, timedelta
 import sqlite3 as sql
 
 with sql.connect("rail.db") as con:
@@ -47,7 +47,8 @@ with sql.connect("rail.db") as con:
                 "train_num int NOT NULL,"
                 "train_starts int NOT NULL,"
                 "train_ends int NOT NULL,"
-                "train_direction boolean NOT NULL )")
+                "train_direction boolean NOT NULL,"
+                "day tinyint(1) NOT NULL)")
 
     cur.execute("DROP TABLE if EXISTS trips")
     cur.execute("CREATE TABLE trips ("
@@ -66,88 +67,85 @@ with sql.connect("rail.db") as con:
 
     # data for stations
     cur.execute("""INSERT INTO stations (station_id, station_name, station_symbol) VALUES
-                (1, 'Boston - South Station, MA', 'BOS'),
-                (2, 'Boston - Back Bay Station, MA', 'BBY'),
-                (3, 'Route 128, MA', 'RTE'),
-                (4, 'Providence, RI', 'PVD'),
-                (5, 'Kingston, RI', 'KIN'),
-                (6, 'Westerly, RI', 'WLY'),
-                (7, 'Mystic, CT', 'MYS'),
-                (8, 'New London, CT', 'NLC'),
-                (9, 'Old Saybrook, CT', 'OSB'),
-                (10, 'New Haven, CT', 'NHV'),
-                (11, 'Bridgeport, CT', 'BRP'),
-                (12, 'Stamford, CT', 'STM'),
-                (13, 'New Rochelle, NY', 'NRO'),
-                (14, 'New York - Penn Station, NY', 'NYP'),
-                (15, 'Newark, NJ', 'NWK'),
-                (16, 'Newark - International Airport', 'EWR'),
-                (17, 'Metropark, NJ', 'MET'),
-                (18, 'Trenton, NJ', 'TRE'),
-                (19, 'Philadelphia - 30th Street Sta', 'PHL'),
-                (20, 'Wilmington - Joseph R. Biden J', 'WIL'),
-                (21, 'Aberdeen, MD', 'ABE'),
-                (22, 'Baltimore - Penn Station, MD', 'BAL'),
-                (23, 'BWI Marshall Airport, MD', 'BWI'),
-                (24, 'New Carrollton, MD', 'NCR'),
-                (25, 'Washington - Union Station, DC', 'WAS'),
-                (26, 'Boston - North Station', 'BON'),
-                (27, 'Woburn - Anderson, MA', 'WOB'),
-                (28, 'Haverhill, MA', 'HAV'),
-                (29, 'Exeter, NH', 'EXE'),
-                (30, 'Durnham - UNH, NH', 'DUR'),
-                (31, 'Dover - NH', 'DOV'),
-                (32, 'Wells - ME', 'WEL'),
-                (33, 'Saco, ME', 'SAC'),
-                (34, 'Old Orchard Beach, ME', 'OOB'),
-                (35, 'Portland, ME', 'POR')""")
+                (1, 'Portland, ME', 'POR'),
+                (2, 'Old Orchard Beach, ME', 'OOB'),
+                (3, 'Saco, ME', 'SAC'),
+                (4, 'Wells - ME', 'WEL'),
+                (5, 'Dover - NH', 'DOV'),
+                (6, 'Durnham - UNH, NH', 'DUR'),
+                (7, 'Exeter, NH', 'EXE'),
+                (8, 'Haverhill, MA', 'HAV'),
+                (9, 'Woburn - Anderson, MA', 'WOB'),
+                (10, 'Boston - North Station', 'BON'),
+                (11, 'Boston - South Station, MA', 'BOS'),
+                (12, 'Boston - Back Bay Station, MA', 'BBY'),
+                (13, 'Route 128, MA', 'RTE'),
+                (14, 'Providence, RI', 'PVD'),
+                (15, 'Kingston, RI', 'KIN'),
+                (16, 'Westerly, RI', 'WLY'),
+                (17, 'Mystic, CT', 'MYS'),
+                (18, 'New London, CT', 'NLC'),
+                (19, 'Old Saybrook, CT', 'OSB'),
+                (20, 'New Haven, CT', 'NHV'),
+                (21, 'Bridgeport, CT', 'BRP'),
+                (22, 'Stamford, CT', 'STM'),
+                (23, 'New Rochelle, NY', 'NRO'),
+                (24, 'New York - Penn Station, NY', 'NYP'),
+                (25, 'Newark, NJ', 'NWK'),
+                (26, 'Newark - International Airport', 'EWR'),
+                (27, 'Metropark, NJ', 'MET'),
+                (28, 'Trenton, NJ', 'TRE'),
+                (29, 'Philadelphia - 30th Street Sta', 'PHL'),
+                (30, 'Wilmington - Joseph R. Biden J', 'WIL'),
+                (31, 'Aberdeen, MD', 'ABE'),
+                (32, 'Baltimore - Penn Station, MD', 'BAL'),
+                (33, 'BWI Marshall Airport, MD', 'BWI'),
+                (34, 'New Carrollton, MD', 'NCR'),
+                (35, 'Washington - Union Station, DC', 'WAS')""")
 
     # data for TRAINS
+    #12 Trains going north and 12 going south on weekdays, 5 trains going north and 5 going south on weekend.
     cur.execute("""INSERT INTO trains VALUES
-                (1,1,25,0),
-                (2,1,25,0),
-                (3,1,25,0),
-                (4,1,25,0),
-                (5,1,25,0),
-                (6,1,25,0),
-                (7,1,25,0),
-                (8,1,25,0),
-                (9,1,25,0),
-                (10,1,25,0),
-                (11,1,25,0),
-                (12,1,25,0),
-                (13,1,25,0),
-                (14,1,25,0),
-                (15,1,25,0),
-                (16,25,1,1),
-                (17,25,1,1),
-                (18,25,1,1),
-                (19,25,1,1),
-                (20,25,1,1),
-                (21,25,1,1),
-                (22,25,1,1),
-                (23,25,1,1),
-                (24,25,1,1),
-                (25,25,1,1),
-                (26,25,1,1),
-                (27,25,1,1),
-                (28,25,1,1),
-                (29,25,1,1),
-                (30,25,1,1),
-                (31,26,35,0),
-                (32,26,35,0),
-                (33,26,35,0),
-                (34,26,35,0),
-                (35,26,35,0),
-                (36,35,26,1),
-                (37,35,26,1),
-                (38,35,26,1),
-                (39,35,26,1),
-                (40,35,26,1)""")
+                (1,1,35,0,1),
+                (2,1,35,0,1),
+                (3,1,35,0,1),
+                (4,1,35,0,1),
+                (5,1,35,0,1),
+                (6,1,35,0,1),
+                (7,1,35,0,1),
+                (8,1,35,0,1),
+                 (9,1,35,0,1),
+                (10,1,35,0,1),
+                (11,1,35,0,1),
+                (12,1,35,0,1),
+                (13,35,1,1,1),
+                (14,35,1,1,1),
+                (15,35,1,1,1),
+                (16,35,1,1,1),
+                (17,35,1,1,1),
+                (18,35,1,1,1),
+                (19,35,1,1,1),
+                (20,35,1,1,1),
+                (21,35,1,1,1),
+                (22,35,1,1,1),
+                (23,35,1,1,1),
+                (24,35,1,1,1),
+                (25,1,35,0,0),
+                (26,1,35,0,0),
+                (27,1,35,0,0),
+                (28,1,35,0,0),
+                (29,1,35,0,0),
+                (30,1,35,0,0),
+                (31,35,1,1,0),
+                (32,35,1,1,0),
+                (33,35,1,1,0),
+                (34,35,1,1,0),
+                (35,35,1,1,0)""")
 
+    #8 trains going north mon-fri
     # data for segments
     cur.execute("""INSERT INTO segments VALUES
-    (1,35,2,10.00),
+    (1,NULL,2,10.00),
     (2,1,3,12.00),
     (3,2,4,13.00),
     (4,3,5,1.00),
@@ -171,8 +169,8 @@ with sql.connect("rail.db") as con:
     (22,21,23,1.00),
     (23,22,24,1.00),
     (24,23,25,1.00),
-    (25,24,NULL,1.00),
-    (26,NULL,27,1.00),
+    (25,24,26,1.00),
+    (26,25,27,1.00),
     (27,26,28,1.00),
     (28,27,29,1.00),
     (29,28,30,1.00),
@@ -181,13 +179,42 @@ with sql.connect("rail.db") as con:
     (32,31,33,1.00),
     (33,32,34,1.00),
     (34,33,35,1.00),
-    (35,34,1,1.00)""")
+    (35,34,NULL,1.00)""")
 
-#Python script for seats free values
-    for i in range(1,2):
-        start_month = dt.datetime(2017,5,i)
-        for i in range(1,41): #for all trains - we can change this depending on how many trains we want.
-            for j in range(1,25):
-                cur.execute("INSERT INTO Seats_free values (%d,%d,'%s',%d);\n"%(i,j,start_month.strftime("%Y-%m-%d"),448))
 
+
+    #SEATS FREE PYTHON SCRIPT#
+    d1 = date(2017,5,1)
+    d2 = date(2018,5,1)
+
+    delta = d2 - d1
+    days = []
+
+    for i in range(delta.days+1):
+        days.append(d1 + timedelta(days=i))
+
+    weekend =[]
+    weekday = []
+    #get weekdays and weekends
+    for x in range(len(days)):
+        if x%7==5 or x%7==6:#sat/sunday
+            weekend.append(str(days[x]))
+        else:
+            weekday.append(str(days[x]))
+
+    #insert to weekdays
+    for i in range(len(weekday)):
+        for j in range(1,25):
+            cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
+                        "VALUES(?,?,?,?)",(j,j,weekday[i],448))
+
+
+    #insert into weekends
+    for i in range(len(weekend)):
+        for j in range(26,36):
+            cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
+                        "VALUES(?,?,?,?)", (j, j, weekend[i], 448))
+
+    #print(weekend)
+    #print(weekday)
 
