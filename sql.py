@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+import datetime
 import sqlite3 as sql
 
 with sql.connect("rail.db") as con:
@@ -39,8 +40,8 @@ with sql.connect("rail.db") as con:
     cur.execute("CREATE TABLE stops_at ("
                 "train_id int DEFAULT NULL,"
                 "station_id int DEFAULT NULL,"
-                "time_in timestamp NOT NULL,"
-                "time_out timestamp NOT NULL )")
+                "time_in time NOT NULL,"
+                "time_out time NOT NULL )")
 
     cur.execute("DROP TABLE if EXISTS trains")
     cur.execute("CREATE TABLE trains ("
@@ -105,6 +106,7 @@ with sql.connect("rail.db") as con:
 
     # data for TRAINS
     #12 Trains going north and 12 going south on weekdays, 5 trains going north and 5 going south on weekend.
+    #(train_num,start_station,end_station, direction, weekend/weekday)
     cur.execute("""INSERT INTO trains VALUES
                 (1,1,35,0,1),
                 (2,1,35,0,1),
@@ -114,7 +116,7 @@ with sql.connect("rail.db") as con:
                 (6,1,35,0,1),
                 (7,1,35,0,1),
                 (8,1,35,0,1),
-                 (9,1,35,0,1),
+                (9,1,35,0,1),
                 (10,1,35,0,1),
                 (11,1,35,0,1),
                 (12,1,35,0,1),
@@ -215,6 +217,32 @@ with sql.connect("rail.db") as con:
             cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
                         "VALUES(?,?,?,?)", (j, j, weekend[i], 448))
 
-    #print(weekend)
-    #print(weekday)
+
+    #stops_at data
+    #exmaple: train 1 stops at station 2 at 9:30AM, time out 9:33:
+    now = datetime.datetime(2017,5,1,5,0)# for time_in
+    now1 = datetime.datetime(2017,5,1,5,0)# for time_out
+    end = now+datetime.timedelta(hours = 24)
+    time_in =[]
+    time_out = []
+    #time_out = []
+    while now <=end:
+        time_in.append(now)
+        time_out.append(now1)
+        now1= now + datetime.timedelta(minutes=18)
+        now+=datetime.timedelta(minutes=15)
+
+    time_in = [t.strftime("%H:%M") for t in time_in]
+    time_out = [t.strftime("%H:%M") for t in time_out]
+
+
+
+    for y in range(1,36):
+        for z in range(1,36):
+            cur.execute("INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES"
+                            "(?,?,?,?)",(y,z,time_in[z+y],time_out[z+y]))
+
+
+    #end of stops_at data. ( I think this will work -Eddy.S)
+
 
