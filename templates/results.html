@@ -6,6 +6,10 @@
 
 {% if found %}
 {% for result in results %}
+
+<h1> Results</h1>
+<hr>
+<br>
 <div class="row">
     <div class="col s8">
         Trip information
@@ -16,7 +20,7 @@
     </div>
 
     <div class="col s2">
-        <form id="pick-ticket" method="post" action="/purchase-action">
+        <form id="pick-ticket" method="post" action="/purchase">
             <button class="waves-effect waves-light btn" type="submit"
                     name='book_button' value="{{ result }}">
                 BOOK

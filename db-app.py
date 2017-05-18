@@ -23,7 +23,7 @@ def one_way_act():
         _dep_time = request.form['departure-time'] #time type
         _outgoing_station = request.form['from-station'] # PASSED AS station symbol
         _destination_station = request.form['to-station'] #PASSED as station symbol
-
+        print ("------",_dep_time)
         # PROCESS VALUES HERE FOR QUERIES
         trip_found = False
         results = []
