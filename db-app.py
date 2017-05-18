@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request, url_for, redirect
-from mods_c import  get_stations, get_passengers_table
+from mods_c import  get_stations, get_passengers_table,get_trips_table, get_seats_free
 
 app = Flask(__name__)
 
@@ -87,7 +87,9 @@ def purchase_act():
 @app.route('/tables')
 def tables():
     all_passengers = get_passengers_table()
-    return render_template('tables.html', passengers = all_passengers)
+    trips = get_trips_table()
+    seats_free = get_seats_free()
+    return render_template('tables.html', passengers = all_passengers, trips = trips, sf = seats_free)
 
 if __name__ == "__main__":
     app.run()
