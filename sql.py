@@ -53,7 +53,7 @@ with sql.connect("rail.db") as con:
 
     cur.execute("DROP TABLE if EXISTS trips")
     cur.execute("CREATE TABLE trips ("
-                "trid_id int INTEGER PRIMARY KEY,"
+                "trip_id int INTEGER PRIMARY KEY,"
                 "trip_date date DEFAULT NULL,"
                 "trip_start int NOT NULL,"
                 "trip_end int NOT NULL,"
@@ -207,15 +207,19 @@ with sql.connect("rail.db") as con:
     #insert to weekdays
     for i in range(len(weekday)):
         for j in range(1,25):
-            cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
-                        "VALUES(?,?,?,?)",(j,j,weekday[i],448))
+                cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
+                            "VALUES(?,?,?,?)",(j,j,weekday[i],448))
 
 
     #insert into weekends
     for i in range(len(weekend)):
-        for j in range(26,36):
+        count = 1
+        for j in range(0,11):
+            print(weekend[j])
+
             cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
-                        "VALUES(?,?,?,?)", (j, j, weekend[i], 448))
+                        "VALUES(?,?,?,?)",(j+25, j+25, weekend[i], 448))
+            count+=1
 
 
     #stops_at data
