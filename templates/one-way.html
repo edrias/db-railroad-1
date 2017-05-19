@@ -26,7 +26,7 @@
                             <select id="from-station" class="browser-default" name="from-station">
                                 <option value="" disabled selected>Select Station</option>
                                 {% for station in stations %}
-                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                <option value={{ station[0] }}> {{ station[1] }} - {{station[2]}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -36,7 +36,7 @@
                                 <option value="" disabled selected>Select Station</option>
 
                                 {% for station in stations %}
-                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                <option value={{ station[0] }}> {{ station[1] }} - {{station[2]}}</option>
                                 {% endfor %}
                             </select>
                         </div>
