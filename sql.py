@@ -187,7 +187,7 @@ with sql.connect("rail.db") as con:
 
     #SEATS FREE PYTHON SCRIPT#
     d1 = date(2017,5,1)
-    d2 = date(2018,5,1)
+    d2 = date(2017,9,1)
 
     delta = d2 - d1
     days = []
@@ -207,19 +207,20 @@ with sql.connect("rail.db") as con:
     #insert to weekdays
     for i in range(len(weekday)):
         for j in range(1,25):
+            for k in range(1,36):
                 cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
-                            "VALUES(?,?,?,?)",(j,j,weekday[i],448))
+                            "VALUES(?,?,?,?)",(j,k,weekday[i],448))
 
 
     #insert into weekends
     for i in range(len(weekend)):
         count = 1
         for j in range(0,11):
-            print(weekend[j])
-
-            cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
-                        "VALUES(?,?,?,?)",(j+25, j+25, weekend[i], 448))
-            count+=1
+            for k in range(1,36):
+            #print(weekend[j])
+                cur.execute("INSERT INTO seats_free (train_num,sf_segment_id,sf_date,sf_free)"
+                        "VALUES(?,?,?,?)",(j+25, k, weekend[i], 448))
+            #count+=1
 
 
     #stops_at data
@@ -240,13 +241,38 @@ with sql.connect("rail.db") as con:
     time_out = [t.strftime("%H:%M") for t in time_out]
 
 
+    #trains  1-12 are south bound - weekday
+    #trains 13-24 are north bound - weekday
+    #trains 25-30 are south bound - weekend
+    #trains 31-35 are north bound - weekend
 
-    for y in range(1,36):
+    #trains 1-12
+    for y in range(1,13):
         for z in range(1,36):
             cur.execute("INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES"
                             "(?,?,?,?)",(y,z,time_in[z+y],time_out[z+y]))
 
 
-    #end of stops_at data. ( I think this will work -Eddy.S)
+    #trains 13-24
+    for y in range(1,13):
+        count = 1
+        for z in range(35,0,-1):
+            cur.execute("INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES"
+                        "(?,?,?,?)", (y+12, z, time_in[y+(35-z)], time_out[y + (35 -z)]))
+            count+=1
+
+    #trains 25-30
+    for y in range(1,7):
+        for z in range(1,36):
+            cur.execute("INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES"
+                        "(?,?,?,?)", (y+24, z, time_in[z + y], time_out[z + y]))
+
+    #trains 31-35
+    for y in range(1,6):
+        for z in range(35,0,-1):
+            cur.execute("INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES"
+                        "(?,?,?,?)", (y + 30, z, time_in[y + (35 - z)], time_out[y + (35 - z)]))
+
+    #end of stops_at data. ( I think this will work -Emmanuil.S)
 
 
