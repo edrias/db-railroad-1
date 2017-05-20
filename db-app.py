@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request, url_for, redirect
-from mods_c import  get_stations, get_passengers_table,get_trips_table, get_seats_free
+from mods_c import  get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains
 
 app = Flask(__name__)
 
@@ -21,14 +21,31 @@ def one_way_act():
     if request.method == "POST":
         _dep_date = request.form['departure-date'] #date type
         _dep_time = request.form['departure-time'] #time type
-        _outgoing_station = request.form['from-station'] # PASSED AS station symbol
-        _destination_station = request.form['to-station'] #PASSED as station symbol
-
+        _outgoing_station = request.form['from-station'] # PASSED AS station id
+        _destination_station = request.form['to-station'] #PASSED as station id
+        _tickets = request.form['tickets'] # number of tickets max 8
         # PROCESS VALUES HERE FOR QUERIES
         trip_found = False
         results = []
-        # if TRIP is found from query, chane trip found to TURUE
-        return render_template('results.html', found = trip_found, results = results)
+
+        #must pass trip_date, trip_start, trip_end train_id,trip_fare into html
+        destination = get_destination_stations(_outgoing_station,_destination_station)
+
+        results.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
+        # This is neccessary for some reason. The indexing is weird.
+        results = results[0]
+
+        #for the case of no match##
+        all_results = []
+
+        if results!= []:
+            trip_found = True
+        else:
+            all_results.append(get_all_available_trains(_dep_date,_outgoing_station,_destination_station))
+            trip_found = False
+
+        # if TRIP is found from query, change trip found to TRUE
+        return render_template('results.html', found = trip_found,all_results = all_results[0], results = results,destination = destination, tickets = _tickets)
     return "Oops you can't access this page"
 
 
