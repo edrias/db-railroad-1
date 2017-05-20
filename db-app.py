@@ -34,18 +34,20 @@ def one_way_act():
         results.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
         # This is neccessary for some reason. The indexing is weird.
         results = results[0]
-
+        print(results)
         #for the case of no match##
         all_results = []
 
         if results!= []:
             trip_found = True
+
         else:
             all_results.append(get_all_available_trains(_dep_date,_outgoing_station,_destination_station))
+            all_results = all_results[0]
             trip_found = False
 
         # if TRIP is found from query, change trip found to TRUE
-        return render_template('results.html', found = trip_found,all_results = all_results[0], results = results,destination = destination, tickets = _tickets)
+        return render_template('results.html', found = trip_found,all_results = all_results, results = results,destination = destination, tickets = _tickets)
     return "Oops you can't access this page"
 
 
