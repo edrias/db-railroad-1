@@ -53,7 +53,7 @@ with sql.connect("rail.db") as con:
 
     cur.execute("DROP TABLE if EXISTS trips")
     cur.execute("CREATE TABLE trips ("
-                "trip_id int INTEGER PRIMARY KEY,"
+                "trip_id INTEGER PRIMARY KEY,"
                 "trip_date date DEFAULT NULL,"
                 "trip_start int NOT NULL,"
                 "trip_end int NOT NULL,"
