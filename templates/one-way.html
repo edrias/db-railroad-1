@@ -30,7 +30,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class=" col s6">
+                        <div class= "col s6">
                             <label> To</label>
                             <select id="to-station" class="browser-default" name="to-station">
                                 <option value="" disabled selected>Select Station</option>
@@ -40,9 +40,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <div>
+                            <select id="tickets" class="browser-default" name="tickets">
+                                <option value="" disabled selected>Select Tickets</option>
+                                {% for index in range(1,9) %}
+                                <option value="{{ index }}">{{index}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
-                    <br>
+
 
                     <button id="onewaybtn" class="btn waves-effect waves-light" type="submit">OK
                     </button>
