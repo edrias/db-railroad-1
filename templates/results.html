@@ -22,9 +22,9 @@ div{
             </ul>
     </div>
     <div class="col s2">
-        <form id="pick-ticket" method="post">
+        <form id="pick-ticket" method="post" action="/purchase">
             <button class="waves-effect waves-light btn" type="submit"
-                    name='book_button'  value="{{ results }}" ><a href="url_for{{('purchase')}}"></a>
+                    name='book_button'  value="{{ results }}" >
                 BOOK
             </button>
         </form>
@@ -62,9 +62,9 @@ div{
             </ul>
     </div>
     <div class="col s2">
-        <form id="pick-ticket1" method="post">
+        <form id="pick-ticket1" method="post" action="/purchase">
             <button class="waves-effect waves-light btn" type="submit"
-                    name='book_button'  value="{{ results }}" ><a href="url_for{{('purchase')}}"></a>
+                    name='book_button'  value="{{ result }}" >
                 BOOK
             </button>
         </form>

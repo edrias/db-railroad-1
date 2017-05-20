@@ -79,7 +79,7 @@ def round_trip_act():
     return "Oops you can't access this page"
 
 
-@app.route('/purchase/')
+@app.route('/purchase', methods =['POST'])
 def purchase_tkt():
     # USERS will only be redirected to this page from selecting a trip - otherwise inaacessible page
     if request.method == 'POST':
