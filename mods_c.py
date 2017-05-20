@@ -94,7 +94,7 @@ def get_seats_free(start_station,end_station,date,tickets):
     cursor = db.cursor()
     start_station = int(start_station)
     end_station = int(end_station)
-    print(int(start_station))
+    #print(int(start_station))
 
     for x in range(start_station,end_station):
        sf_free = cursor.execute("SELECT sf_free-'{}' FROM seats_free WHERE sf_segment_id = '{}' AND  sf_date = '{}'".format(tickets,x,date)).fetchone()
@@ -120,7 +120,13 @@ def get_time_range(time):
 
     return time_range
 
+def insert_trips(date,trip_start,trip_end, train_id,passenger_id,trip_fare,payment_method):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
 
+    cursor.execute("INSERT INTO trips(trip_date,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method)"
+                   " VALUES(?,?,?,?,?,?,?)",(date,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method))
+    db.commit()
 
 #Some tests:
 #time = datetime.strftime('05:30')
@@ -128,3 +134,4 @@ def get_time_range(time):
 #print(get_time_range('05:30'))
 #print(get_seats_free(1,4,'2017-05-01',4))
 #print(get_all_available_trains('2017-05-06',1,12))
+insert_trips('2017-05-01',1,2,1,1,10.00,'0')

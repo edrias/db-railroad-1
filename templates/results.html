@@ -1,9 +1,5 @@
 {% extends 'default.html' %}
 
-div{
-    text-align:center;
-}
-
 {% block main %}
 
 
@@ -12,12 +8,13 @@ div{
 <div class="row">
     <div class="col s10">
             <ul><strong>
-                <li>Train ID: {{result[0]}}</li>
-                <li>Departure Date: {{result[1]}}</li>
-                <li>Departure Time: {{result[2]}}</li>
-                <li>Departure Location: {{destination[0]}}</li>
-                <li>Destination: {{destination[1]}}</li>
-                <li>Tickets: {{tickets}}</li>
+                <li>Train ID: {{result.train_id}} </li>
+                <li>Departure Date: {{result.dep_date}}</li>
+                <li>Departure Time: {{result.dep_time}}</li>
+                <li>Departure Location: {{result.outgoing_station}}</li>
+                <li>Destination: {{result.destination_station}}</li>
+                <li>Tickets: {{result.tickets}}</li>
+                <li>Price: ${{result.price}}</li>
                 </strong>
             </ul>
     </div>
@@ -48,16 +45,17 @@ div{
     <center><h1> All Available Times:</h1></center>
 
 </div>
-{% for result in all_results %}
+{% for result in results %}
 <div class="row">
     <div class="col s10">
             <ul><strong>
-                <li>Train ID: {{result[0]}}</li>
-                <li>Departure Date: {{result[1]}}</li>
-                <li>Departure Time: {{result[2]}}</li>
-                <li>Departure Location: {{destination[0]}}</li>
-                <li>Destination: {{destination[1]}}</li>
-                <li>Tickets: {{tickets}}</li>
+                <li>Train ID: {{result.train_id}} </li>
+                <li>Departure Date: {{result.dep_date}}</li>
+                <li>Departure Time: {{result.dep_time}}</li>
+                <li>Departure Location: {{result.outgoing_station}}</li>
+                <li>Destination: {{result.destination_station}}</li>
+                <li>Tickets: {{result.tickets}}</li>
+                <li>Price: ${{result.price}}</li>
                 </strong>
             </ul>
     </div>

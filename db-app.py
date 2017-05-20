@@ -1,7 +1,17 @@
 from flask import Flask,render_template,request, url_for, redirect
-from mods_c import  get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains
-
+from mods_c import  get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains,insert_trips
 app = Flask(__name__)
+class result:
+    def __init__(self,train_num,dep_date,dep_time,outgoing_station,destination_station,tickets):
+        self.train_id = train_num
+        self.dep_date = dep_date
+        self.dep_time = dep_time
+        self.outgoing_station = get_destination_stations(outgoing_station,destination_station)[0]
+        self.destination_station =get_destination_stations(outgoing_station,destination_station)[1]
+        self.tickets = tickets
+        #price = #of segments * 8 * #of tickets
+        self.price = (abs(int(outgoing_station)-int(destination_station))*8)*int(tickets)
+
 
 
 @app.route("/")
@@ -24,30 +34,32 @@ def one_way_act():
         _outgoing_station = request.form['from-station'] # PASSED AS station id
         _destination_station = request.form['to-station'] #PASSED as station id
         _tickets = request.form['tickets'] # number of tickets max 8
+        print(_tickets)
         # PROCESS VALUES HERE FOR QUERIES
-        trip_found = False
+        trip_found = True
+        trips = []#query results
         results = []
-
-        #must pass trip_date, trip_start, trip_end train_id,trip_fare into html
-        destination = get_destination_stations(_outgoing_station,_destination_station)
-
-        results.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
-        # This is neccessary for some reason. The indexing is weird.
-        results = results[0]
-        print(results)
-        #for the case of no match##
         all_results = []
 
-        if results!= []:
-            trip_found = True
+        #query available trips
+        trips.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
 
-        else:
+        #list of 'result' object for each trip
+        for x in range(len(trips[0])):
+            results.append(result(trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
+
+        #If there is no match, display all available times for the desired start/end destination.
+        if results == []:
+            #query gets all results
             all_results.append(get_all_available_trains(_dep_date,_outgoing_station,_destination_station))
-            all_results = all_results[0]
+
+            #list of 'result' object for each trip
+            for x in range(len(all_results[0])):
+                results.append(result(all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
             trip_found = False
 
         # if TRIP is found from query, change trip found to TRUE
-        return render_template('results.html', found = trip_found,all_results = all_results, results = results,destination = destination, tickets = _tickets)
+        return render_template('results.html', found = trip_found, results = results)
     return "Oops you can't access this page"
 
 
@@ -93,6 +105,7 @@ def purchase_tkt():
 def purchase_act():
     if request.method=='POST':
         trip_details = request.form['result'] # TODO need to pass the trip details into the purchase
+        print("trip details: '{}".format(trip_details))#nothing prints for some reason.
         fname = request.form['fname'] #str
         lname = request.form['lname'] #str
         email = request.form['email'] #email
