@@ -7,11 +7,11 @@
 <table class="bordered">
     <thead>
     <tr>
-        <th>passenger_id</th>
-        <th>lname</th>
-        <th>email</th>
-        <th>billing_addr</th>
-        <th>payment</th>
+        <th>passenger_id varchar(40)</th>
+        <th>lname varchar(40)</th>
+        <th>email varchar(40)</th>
+        <th>billing_addr text</th>
+        <th>payment char(16)</th>
 
 
     </tr>
@@ -31,17 +31,21 @@
     </tbody>
 </table>
 
+<hr>
+
 <h2> Trips Table</h2>
 <table class="bordered">
     <thead>
     <tr>
         <th>trip_id</th>
         <th>trip_date</th>
-        <th>trip_start</th>
+        <th>trip_start FK(segments segment_id)</th>
         <th>trip_end</th>
-        <th>passenger_id</th>
+        <th> train_id FK(train_num)</th>
+        <th>passenger_id (FK passengers passenger_id)</th>
         <th>trip_fare</th>
         <th>payment_method</th>
+
 
     </tr>
     </thead>
@@ -56,6 +60,8 @@
         <th> {{ trip[4] }}</th>
         <th> {{ trip[5] }}</th>
         <th> {{ trip[6] }}</th>
+        <th> {{ trip[7] }}</th>
+
 
         {% endfor %}
     </tr>
