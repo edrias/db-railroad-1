@@ -2,30 +2,110 @@
 
 {% block main %}
 
-
-{% if found %}
-{% for result in results %}
+{% if roundtrip %}
+    {% if found %}
+        {% for result in results %}
 <div class="row">
+    <table>
+        <tr>
+            <td>
+
+
     <div class="col s10">
+            <h5>Departing Trip</h5>
             <ul><strong>
-                <li>Train ID: {{result.train_id}} </li>
-                <li>Departure Date: {{result.dep_date}}</li>
-                <li>Departure Time: {{result.dep_time}}</li>
-                <li>Departure Location: {{result.outgoing_station}}</li>
-                <li>Destination: {{result.destination_station}}</li>
-                <li>Tickets: {{result.tickets}}</li>
-                <li>Price: ${{result.price}}</li>
+                <li>Train ID: {{result[0].train_id}} </li>
+                <li>Departure Date: {{result[0].dep_date}}</li>
+                <li>Departure Time: {{result[0].dep_time}}</li>
+                <li>Departure Location: {{result[0].outgoing_station}}</li>
+                <li>Destination: {{result[0].destination_station}}</li>
+                <li>Tickets: {{result[0].tickets}}</li>
+                <li>Price: ${{result[0].price}}</li>
                 </strong>
             </ul>
     </div>
+            </td>
+            <td>
+
+    <div class="col s10">
+            <h5>Returning Trip</h5>
+            <ul><strong>
+                <li>Train ID: {{result[1].train_id}} </li>
+                <li>Departure Date: {{result[1].dep_date}}</li>
+                <li>Departure Time: {{result[1].dep_time}}</li>
+                <li>Departure Location: {{result[1].outgoing_station}}</li>
+                <li>Destination: {{result[1].destination_station}}</li>
+                <li>Tickets: {{result[1].tickets}}</li>
+                <li>Price: ${{result[1].price}}</li>
+                </strong>
+            </ul>
+    </div>
+            </td>
+            <td>
+
     <div class="col s2">
-        <form id="pick-ticket1" method="post" action="/purchase">
+        <form id="pick-ticket0" method="post" action="/purchase">
             <button class="waves-effect waves-light btn" type="submit"
-                    name='book_button'  value= "{{result.result_id}}">
+                    name='book_button'  value= "({{result[0].result_id}},{{result[1].result_id}})">
                 BOOK
             </button>
         </form>
     </div>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<hr>
+        {% endfor %}
+
+
+
+    {% else %}
+<div class="row">
+    <center><h1> No matches found </h1></center>
+
+</div>
+
+
+{% endif %}
+{% else %}
+
+
+
+{% if found %}
+{% for result in results %}
+<div class="row">
+    <table>
+        <tr>
+            <td>
+
+                <div class="col s10">
+                        <ul><strong>
+                            <li>Train ID: {{result.train_id}} </li>
+                            <li>Departure Date: {{result.dep_date}}</li>
+                            <li>Departure Time: {{result.dep_time}}</li>
+                            <li>Departure Location: {{result.outgoing_station}}</li>
+                            <li>Destination: {{result.destination_station}}</li>
+                            <li>Tickets: {{result.tickets}}</li>
+                            <li>Price: ${{result.price}}</li>
+                            </strong>
+                        </ul>
+                </div>
+            </td>
+            <td>
+
+                <div class="col s2">
+                    <form id="pick-ticket1" method="post" action="/purchase">
+                        <button class="waves-effect waves-light btn" type="submit"
+                                name='book_button'  value= "{{result.result_id}}">
+                            BOOK
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <hr>
@@ -42,9 +122,14 @@
 
 </div>
 <div class="row">
-    <center><h1> All Available Times:</h1></center>
+    <center><h4> All Available Times:</h4></center>
 {% for result in results %}
 <div class="row">
+    <table>
+        <tr>
+            <td>
+
+
     <div class="col s10">
             <ul><strong>
                 <li>Train ID: {{result.train_id}} </li>
@@ -57,6 +142,9 @@
                 </strong>
             </ul>
     </div>
+            </td>
+            <td>
+
     <div class="col s2">
         <form id="pick-ticket" method="post" action="/purchase">
             <button class="waves-effect waves-light btn" type="submit"
@@ -65,12 +153,16 @@
             </button>
         </form>
     </div>
+            </td>
+        </tr>
+    </table>
+<hr>
 </div>
 
-<hr>
 {% endfor%}
 
 {% endif %}
-{% endblock %}
+    {% endif %}
+    {% endblock %}
 
 

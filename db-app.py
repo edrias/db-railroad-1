@@ -1,6 +1,6 @@
 from flask import Flask,render_template,request, url_for, redirect
 from mods_c import * #get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains,insert_trips
-import pickle
+from ast import literal_eval
 import os
 
 app = Flask(__name__)
@@ -57,6 +57,7 @@ def one_way_act():
             results.append(result(generate_result_id(result_id),trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
 
             #insert values of results class into results table.
+            # train_id, date,time,start_station,end_station,tickets
             insert_results(trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets)
 
         #If there is no match, display all available times for the desired start/end destination.
@@ -69,6 +70,7 @@ def one_way_act():
                 result_id = get_max_result_id()[0]
                 results.append(result(generate_result_id(result_id),all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
                 #insert values of results class into results table
+                #train_id, date,time,start_station,end_station,tickets
                 insert_results(all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets)
 
             trip_found = False
@@ -76,7 +78,7 @@ def one_way_act():
 
 
         # if TRIP is found from query, change trip found to TRUE
-        return render_template('results.html', found = trip_found, results = results)
+        return render_template('results.html', found = trip_found, results = results, roundtrip = False)
     return "Oops you can't access this page"
 
 #checks if index is none and increments accordingly if not none
@@ -104,7 +106,7 @@ def round_trip_act():
         _tickets = request.form['tickets']
         _outgoing_station = request.form['from-station'] #station symbol
         _destination_station = request.form['to-station'] #station symbol
-
+        print(_destination_station)
         # PROCESS VALUES HERE
         #put results into results list as a type (perhaps results type)
         departing_trips = []
@@ -116,8 +118,8 @@ def round_trip_act():
         departing_trips.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
         returning_trips.append(get_one_way_trip(_return_date,_return_time,_destination_station,_outgoing_station))
 
-        #print(departing_trips)
-        #print(returning_trips[0])
+        print(departing_trips)
+        print(returning_trips[0])
 
         #for each departing trip, have each available returning trip
         for x in range(len(departing_trips[0])):
@@ -125,23 +127,25 @@ def round_trip_act():
                 result_id = get_max_result_id()[0]
 
                 trip_departing = result(generate_result_id(result_id),departing_trips[0][x][0],_dep_date,departing_trips[0][x][2],_outgoing_station,_destination_station,_tickets)
-                insert_results(trip_departing.train_id,trip_departing.dep_date,trip_departing.dep_time,trip_departing.outgoing_station,trip_departing.destination_station,trip_departing.tickets)
+                insert_results(trip_departing.train_id,trip_departing.dep_date,trip_departing.dep_time,_outgoing_station,_destination_station,trip_departing.tickets)
 
                 result_id = get_max_result_id()[0]
 
                 #trip_returning = result(generate_result_id(result_id),returning_trips[0][y][0],_return_date,returning_trips,[0][y][2],_destination_station,_outgoing_station,_tickets)
-                trip_returning = result(generate_result_id(result_id),returning_trips[0][y][0],_dep_date,returning_trips[0][y][2],_destination_station,_outgoing_station,_tickets)
+                trip_returning = result(generate_result_id(result_id),returning_trips[0][y][0],_return_date,returning_trips[0][y][2],_destination_station,_outgoing_station,_tickets)
 
-                insert_results(trip_returning.train_id,trip_returning.dep_date,trip_returning.dep_time,trip_returning.outgoing_station,trip_returning.destination_station,trip_returning.tickets)
+                insert_results(trip_returning.train_id,trip_returning.dep_date,trip_returning.dep_time,_destination_station,_outgoing_station,trip_returning.tickets)
 
-                results.append((departing_trips,trip_returning))
+                results.append((trip_departing,trip_returning))
+
 
         if results == []:
             trip_found = False
         else:
             trip_found = True
 
-        return render_template('results.html',found= trip_found,results = results)
+
+        return render_template('results.html', found= trip_found, results = results, roundtrip = True)
     return "Oops you can't access this page"
 
 
@@ -150,8 +154,10 @@ def purchase_tkt():
     # USERS will only be redirected to this page from selecting a trip - otherwise inaacessible page
     if request.method == 'POST':
         result_id = request.form['book_button']  # result type - still need to be defined
+
         print(result_id)
 
+        #if result_id
         #page that has the form- once form is submitted - goes to purchase act
         return render_template('purchase.html', result = result_id)
     return "Oops you can't access this page"
@@ -162,6 +168,8 @@ def purchase_act():
     if request.method=='POST':
         result_id= request.form['action'] # TODO need to pass the trip details into the purchase
         #rint(trip_details.dep_date)
+        result_id = literal_eval(result_id)#value from form is a string, convert to int.
+
 
 
         fname = request.form['fname'] #str
@@ -170,28 +178,60 @@ def purchase_act():
         billing_addr = request.form['addr'] #str
         credit_card = request.form['payment'] #number
 
-        #retrieve trip info from results table given result_id
-        trip_details = get_result(result_id)[0]
+        if isinstance(result_id,tuple):#IF ROUND TRIP!
+            dep_trip = get_result(result_id[0])[0]
+            ret_trip = get_result(result_id[1])[0]
+            print(dep_trip)
+            print(ret_trip)
 
-       #info that will be entered into trip details
-        train_id = trip_details[1]
-        trip_date = trip_details[2]
-        trip_time = trip_details[3]
-        trip_start = trip_details[4]
-        trip_end = trip_details[5]
-        tickets = trip_details[6]
-        # fare is calucuated by # of segments and tickets. General price is $8.00
-        fare = abs(int(trip_start) - int(trip_end))*8*int(tickets)
+            dtrain_id = dep_trip[1]
+            dtrip_date = dep_trip[2]
+            dtrip_time = dep_trip[3]
+            dtrip_start = dep_trip[4]
+            dtrip_end = dep_trip[5]
+            tickets = dep_trip[6]
 
-        #insert passenger info from form values
-        insert_passenger(fname,lname,email,billing_addr,credit_card)
+            rtrain_id = ret_trip[1]
+            rtrip_date = ret_trip[2]
+            rtrip_time = ret_trip[3]
+            rtrip_start = ret_trip[4]
+            rtrip_end = ret_trip[5]
+            #tickets already taken care of
+            fare = abs(int(rtrip_start) - int(rtrip_end)) * 8 * int(tickets)
 
-        #insert into trips table.
-        passenger_id = get_passenger_id(email)[0]#passenger_id from passengers table.
-        insert_trips(trip_date,trip_time,trip_start,trip_end,train_id,passenger_id,fare,credit_card)
+            insert_passenger(fname,lname,email,billing_addr,credit_card)
+            passenger_id = get_passenger_id(email)[0]
 
-        #update seats_free for each segment!
-        decrease_seats_free(train_id,trip_date,trip_start,trip_end,tickets)
+            #departing trip
+            insert_trips(dtrip_date,dtrip_time,dtrip_start,dtrip_end,dtrain_id,passenger_id,fare,credit_card)
+            decrease_seats_free(dtrain_id, dtrip_date, dtrip_start, dtrip_end, tickets)
+            #returning trip
+            insert_trips(rtrip_date,rtrip_time,rtrip_start,rtrip_end,rtrain_id,passenger_id,fare,credit_card)
+            decrease_seats_free(rtrain_id, rtrip_date, rtrip_start, rtrip_end, tickets)
+
+        else:
+            #retrieve trip info from results table given result_id
+            trip_details = get_result(result_id)[0]
+            print(trip_details)
+           #info that will be entered into trip details
+            train_id = trip_details[1]
+            trip_date = trip_details[2]
+            trip_time = trip_details[3]
+            trip_start = trip_details[4]
+            trip_end = trip_details[5]
+            tickets = trip_details[6]
+            # fare is calucuated by # of segments and tickets. General price is $8.00
+            fare = abs(int(trip_start) - int(trip_end))*8*int(tickets)
+
+            #insert passenger info from form values
+            insert_passenger(fname,lname,email,billing_addr,credit_card)
+
+            #insert into trips table.
+            passenger_id = get_passenger_id(email)[0]#passenger_id from passengers table.
+            insert_trips(trip_date,trip_time,trip_start,trip_end,train_id,passenger_id,fare,credit_card)
+
+            #update seats_free for each segment!
+            decrease_seats_free(train_id,trip_date,trip_start,trip_end,tickets)
 
         return "Purchsed Template"
     return "Oops you can't access this page"
