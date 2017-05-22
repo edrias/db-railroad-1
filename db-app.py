@@ -15,6 +15,7 @@ class result:
         #price = #of segments * 8 * #of tickets
         self.price = (abs(int(outgoing_station)-int(destination_station))*8)*int(tickets)
 
+
     #def __str__(self):
     #    return self.train_id
 
@@ -51,8 +52,8 @@ def one_way_act():
 
         #list of 'result' object for each trip
         for x in range(len(trips[0])):
-            index = get_max_result_id()[0]
-            results.append(result(is_none_index(index),trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
+            result_id = get_max_result_id()[0]
+            results.append(result(generate_result_id(result_id),trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
 
             #insert values of results class into results table.
             insert_results(trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets)
@@ -64,8 +65,8 @@ def one_way_act():
 
             #list of 'result' object for each trip
             for x in range(len(all_results[0])):
-                index = get_max_result_id()[0]
-                results.append(result(is_none_index(index),all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
+                result_id = get_max_result_id()[0]
+                results.append(result(generate_result_id(result_id),all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
                 #insert values of results class into results table
                 insert_results(all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets)
 
@@ -78,7 +79,7 @@ def one_way_act():
     return "Oops you can't access this page"
 
 #checks if index is none and increments accordingly if not none
-def is_none_index(index):
+def generate_result_id(index):
     if index == None:
         return 1
     else:
@@ -99,15 +100,46 @@ def round_trip_act():
         _dep_time = request.form['departure-time'] #time type
         _return_date = request.form['return-date'] #date type
         _return_time = request.form['return-time'] #time type
-
+        _tickets = request.form['tickets']
         _outgoing_station = request.form['from-station'] #station symbol
         _destination_station = request.form['to-station'] #station symbol
 
         # PROCESS VALUES HERE
         #put results into results list as a type (perhaps results type)
-        trip_found = False
-
+        departing_trips = []
+        returning_trips = []
+        all_departing_trips =[]#not sure if we should do this, seems like a big mess waiting to happen
+        all_arriving_trips = []#look at above comment
         results = []
+
+        departing_trips.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
+        returning_trips.append(get_one_way_trip(_return_date,_return_time,_destination_station,_outgoing_station))
+
+        #print(departing_trips)
+        #print(returning_trips[0])
+
+        #for each departing trip, have each available returning trip
+        for x in range(len(departing_trips[0])):
+            for y in range(len(returning_trips[0])):
+                result_id = get_max_result_id()[0]
+
+                trip_departing = result(generate_result_id(result_id),departing_trips[0][x][0],_dep_date,departing_trips[0][x][2],_outgoing_station,_destination_station,_tickets)
+                insert_results(trip_departing.train_id,trip_departing.dep_date,trip_departing.dep_time,trip_departing.outgoing_station,trip_departing.destination_station,trip_departing.tickets)
+
+                result_id = get_max_result_id()[0]
+
+                #trip_returning = result(generate_result_id(result_id),returning_trips[0][y][0],_return_date,returning_trips,[0][y][2],_destination_station,_outgoing_station,_tickets)
+                trip_returning = result(generate_result_id(result_id),returning_trips[0][y][0],_dep_date,returning_trips[0][y][2],_destination_station,_outgoing_station,_tickets)
+
+                insert_results(trip_returning.train_id,trip_returning.dep_date,trip_returning.dep_time,trip_returning.outgoing_station,trip_returning.destination_station,trip_returning.tickets)
+
+                results.append((departing_trips,trip_returning))
+
+        if results == []:
+            trip_found = False
+        else:
+            trip_found = True
+
         return render_template('results.html',found= trip_found,results = results)
     return "Oops you can't access this page"
 

@@ -41,7 +41,7 @@
                         <select  name="from-station" class="browser-default">
                              <option value="" disabled selected>Select Station</option>
                                 {% for station in stations %}
-                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                <option value={{ station[0] }}> {{ station[1] }} - {{station[2]}}</option>
                                 {% endfor %}
                         </select>
                     </div>
@@ -50,8 +50,17 @@
                         <select name="to-station"  class="browser-default">
                              <option value="" disabled selected>Select Station</option>
                                 {% for station in stations %}
-                                <option value={{ station[1] }}> {{ station[0] }} - {{station[1]}}</option>
+                                <option value={{ station[0] }}> {{ station[1] }} - {{station[2]}}</option>
                                 {% endfor %}
+                        </select>
+                    </div>
+                    <h5>Tickets</h5>
+                    <div>
+                        <select id="tickets" class="browser-default" name="tickets">
+                            <option value="" disabled selected>Select Tickets</option>
+                            {% for index in range(1,9) %}
+                            <option value="{{ index }}">{{index}}</option>
+                            {% endfor %}
                         </select>
                     </div>
 <br>
