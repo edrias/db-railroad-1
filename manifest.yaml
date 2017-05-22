@@ -1,0 +1,9 @@
+---
+applications:
+- name: TrackAM
+  memory: 512M
+  host: TrackAM
+  instances: 1
+  path: .
+  buildpack: python_buildpack
+  domain: mybluemix.net

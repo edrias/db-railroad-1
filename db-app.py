@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request, url_for, redirect
 from mods_c import * #get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains,insert_trips
 import pickle
+import os
 
 app = Flask(__name__)
 class result:
@@ -204,4 +205,5 @@ def tables():
     return render_template('tables.html', passengers = all_passengers, trips = trips, sf = seats_free)
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.getenv('PORT', '5000'))
+    app.run(host='0.0.0.0', port=port, debug=True)
