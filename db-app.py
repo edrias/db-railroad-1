@@ -1,8 +1,11 @@
 from flask import Flask,render_template,request, url_for, redirect
-from mods_c import  get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains,insert_trips
+from mods_c import * #get_stations, get_passengers_table,get_trips_table, get_one_way_trip,get_destination_stations,get_seats_free, get_all_available_trains,insert_trips
+import pickle
+
 app = Flask(__name__)
 class result:
-    def __init__(self,train_num,dep_date,dep_time,outgoing_station,destination_station,tickets):
+    def __init__(self,result_id,train_num,dep_date,dep_time,outgoing_station,destination_station,tickets):
+        self.result_id = result_id
         self.train_id = train_num
         self.dep_date = dep_date
         self.dep_time = dep_time
@@ -12,6 +15,8 @@ class result:
         #price = #of segments * 8 * #of tickets
         self.price = (abs(int(outgoing_station)-int(destination_station))*8)*int(tickets)
 
+    #def __str__(self):
+    #    return self.train_id
 
 
 @app.route("/")
@@ -34,19 +39,23 @@ def one_way_act():
         _outgoing_station = request.form['from-station'] # PASSED AS station id
         _destination_station = request.form['to-station'] #PASSED as station id
         _tickets = request.form['tickets'] # number of tickets max 8
-        print(_tickets)
+
         # PROCESS VALUES HERE FOR QUERIES
         trip_found = True
         trips = []#query results
-        results = []
-        all_results = []
+        results = [] #if customer forms return a match, this list is used
+        all_results = []#if customer forms do not return any matches, this list displays all available times for given day.
 
-        #query available trips
+        #query for  available trips given dep_time
         trips.append(get_one_way_trip(_dep_date,_dep_time,_outgoing_station,_destination_station))
 
         #list of 'result' object for each trip
         for x in range(len(trips[0])):
-            results.append(result(trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
+            index = get_max_result_id()[0]
+            results.append(result(is_none_index(index),trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets))
+
+            #insert values of results class into results table.
+            insert_results(trips[0][x][0],_dep_date,trips[0][x][2],_outgoing_station,_destination_station,_tickets)
 
         #If there is no match, display all available times for the desired start/end destination.
         if results == []:
@@ -55,13 +64,25 @@ def one_way_act():
 
             #list of 'result' object for each trip
             for x in range(len(all_results[0])):
-                results.append(result(all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
+                index = get_max_result_id()[0]
+                results.append(result(is_none_index(index),all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets))
+                #insert values of results class into results table
+                insert_results(all_results[0][x][0],_dep_date, all_results[0][x][2],_outgoing_station, _destination_station, _tickets)
+
             trip_found = False
+
+
 
         # if TRIP is found from query, change trip found to TRUE
         return render_template('results.html', found = trip_found, results = results)
     return "Oops you can't access this page"
 
+#checks if index is none and increments accordingly if not none
+def is_none_index(index):
+    if index == None:
+        return 1
+    else:
+        return index + 1
 
 @app.route('/round-trip/')
 def round_trip():
@@ -95,22 +116,49 @@ def round_trip_act():
 def purchase_tkt():
     # USERS will only be redirected to this page from selecting a trip - otherwise inaacessible page
     if request.method == 'POST':
-        result = request.form['book_button']  # result type - still need to be defined
+        result_id = request.form['book_button']  # result type - still need to be defined
+        print(result_id)
+
         #page that has the form- once form is submitted - goes to purchase act
-        return render_template('purchase.html', result = result)
+        return render_template('purchase.html', result = result_id)
     return "Oops you can't access this page"
 
 
 @app.route('/purchase-action', methods=['POST'])
 def purchase_act():
     if request.method=='POST':
-        trip_details = request.form['result'] # TODO need to pass the trip details into the purchase
-        print("trip details: '{}".format(trip_details))#nothing prints for some reason.
+        result_id= request.form['action'] # TODO need to pass the trip details into the purchase
+        #rint(trip_details.dep_date)
+
+
         fname = request.form['fname'] #str
         lname = request.form['lname'] #str
         email = request.form['email'] #email
         billing_addr = request.form['addr'] #str
         credit_card = request.form['payment'] #number
+
+        #retrieve trip info from results table given result_id
+        trip_details = get_result(result_id)[0]
+
+       #info that will be entered into trip details
+        train_id = trip_details[1]
+        trip_date = trip_details[2]
+        trip_time = trip_details[3]
+        trip_start = trip_details[4]
+        trip_end = trip_details[5]
+        tickets = trip_details[6]
+        # fare is calucuated by # of segments and tickets. General price is $8.00
+        fare = abs(int(trip_start) - int(trip_end))*8*int(tickets)
+
+        #insert passenger info from form values
+        insert_passenger(fname,lname,email,billing_addr,credit_card)
+
+        #insert into trips table.
+        passenger_id = get_passenger_id(email)[0]#passenger_id from passengers table.
+        insert_trips(trip_date,trip_time,trip_start,trip_end,train_id,passenger_id,fare,credit_card)
+
+        #update seats_free for each segment!
+        decrease_seats_free(train_id,trip_date,trip_start,trip_end,tickets)
 
         return "Purchsed Template"
     return "Oops you can't access this page"

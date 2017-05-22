@@ -8,6 +8,7 @@ with sql.connect("rail.db") as con:
     cur.execute("DROP TABLE if EXISTS passengers")
     cur.execute("CREATE TABLE passengers ("
                 "passenger_id INTEGER PRIMARY KEY,"
+                "fname varchar(40) NOT NULL,"
                 "lname varchar(40) NOT NULL,"
                 "email varchar(40) NOT NULL,"
                 "billing_addr text DEFAULT NULL,"
@@ -55,6 +56,7 @@ with sql.connect("rail.db") as con:
     cur.execute("CREATE TABLE trips ("
                 "trip_id INTEGER PRIMARY KEY,"
                 "trip_date date DEFAULT NULL,"
+                "trip_time TIME DEFAULT NULL,"
                 "trip_start int NOT NULL,"
                 "trip_end int NOT NULL,"
                 "train_id int NOT NULL,"
@@ -65,6 +67,16 @@ with sql.connect("rail.db") as con:
                 "FOREIGN KEY (trip_start) REFERENCES segments (segment_id),"
                 "FOREIGN KEY (trip_end) REFERENCES segments (segment_id),"
                 "FOREIGN KEY (passenger_id) REFERENCES passengers (passenger_id))")
+
+    cur.execute("DROP TABLE if EXISTS results")
+    cur.execute("CREATE TABLE results ("
+                "result_id INTEGER PRIMARY KEY,"
+                "train_id int NOT NULL,"
+                "dep_date DATE NOT NULL,"
+                "dep_time TIME NOT NULL,"
+                "start_station int NOT NULL,"
+                "end_station int NOT NULL,"
+                "tickets int NOT NULL)")
 
     # data for stations
     cur.execute("""INSERT INTO stations (station_id, station_name, station_symbol) VALUES

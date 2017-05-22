@@ -120,18 +120,74 @@ def get_time_range(time):
 
     return time_range
 
-def insert_trips(date,trip_start,trip_end, train_id,passenger_id,trip_fare,payment_method):
+def insert_trips(date,trip_time,trip_start,trip_end, train_id,passenger_id,trip_fare,payment_method):
     db = sqlite3.connect('rail.db')
     cursor = db.cursor()
 
-    cursor.execute("INSERT INTO trips(trip_date,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method)"
-                   " VALUES(?,?,?,?,?,?,?)",(date,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method))
+    cursor.execute("INSERT INTO trips(trip_date,trip_time,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method)"
+                   " VALUES(?,?,?,?,?,?,?,?)",(date,trip_time,trip_start,trip_end,train_id,passenger_id,trip_fare,payment_method))
     db.commit()
 
-#Some tests:
+def decrease_seats_free(train_num,date,outgoing_station,destination_station,tickets):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    if int(outgoing_station) < int(destination_station):
+        start = outgoing_station
+        end = destination_station
+    else:
+        start = destination_station
+        end = outgoing_station
+    for x in range(start,end+1):
+        print(x)
+        cursor.execute("UPDATE seats_free SET sf_free = sf_free -'{}' WHERE train_num = '{}' and sf_segment_id = '{}' "
+                       "and sf_date = '{}'".format(tickets,train_num,x,date))
+        db.commit()
+
+def insert_results(train_id,dep_date,dep_time,start_station,end_station,tickets):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO results (train_id,dep_date,dep_time,start_station,end_station,tickets) "
+                   " VALUES (?,?,?,?,?,?)",(train_id,dep_date,dep_time,start_station,end_station,tickets))
+    db.commit()
+
+
+def get_max_result_id():
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT max(result_id) FROM results")
+
+    return cursor.fetchone()
+
+def get_result(result_id):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM results WHERE result_id = '{}'".format(result_id))
+
+    return cursor.fetchall()
+
+def insert_passenger(fname,lname,email,billing_addr,payment):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO passengers (fname,lname,email,billing_addr,payment) VALUES (?,?,?,?,?)",
+                   (fname,lname,email,billing_addr,payment))
+    db.commit()
+
+#get passenger_id with email
+def get_passenger_id(email):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT passenger_id FROM passengers WHERE email = '{}'".format(email))
+    return cursor.fetchone()
+
+
+
+    #Some tests:
 #time = datetime.strftime('05:30')
 #print(get_one_way_trip('2017-05-01','05:30','25','1'))
 #print(get_time_range('05:30'))
 #print(get_seats_free(1,4,'2017-05-01',4))
 #print(get_all_available_trains('2017-05-06',1,12))
-insert_trips('2017-05-01',1,2,1,1,10.00,'0')
+#insert_trips('2017-05-01',1,2,1,1,10.00,'0')
+#decrease_seats_free(1,'2017-05-01',5,1,4)
+#index = get_max_result_id()[0]
+#print(index)
