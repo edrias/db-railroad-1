@@ -242,7 +242,6 @@ def tables():
     all_passengers = get_passengers_table()
     trips = get_trips_table()
     seats_free = get_all_seats_free()
-    print ("Seats free-----", seats_free)
     return render_template('tables.html', passengers = all_passengers, trips = trips, sf = seats_free)
 
 if __name__ == "__main__":
