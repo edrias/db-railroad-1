@@ -18,16 +18,17 @@
     </thead>
 
     <tbody>
-    <tr>
         {% for passenger in passengers %}
+            <tr>
+
         <th> {{ passenger[0] }}</th>
         <th> {{ passenger[1] }}</th>
         <th> {{ passenger[2] }}</th>
         <th> {{ passenger[3] }}</th>
         <th> {{ passenger[4] }}</th>
+    </tr>
 
         {% endfor %}
-    </tr>
     </tbody>
 </table>
 
@@ -51,8 +52,9 @@
     </thead>
 
     <tbody>
-    <tr>
+
         {% for trip in trips %}
+        <tr>
         <th> {{ trip[0] }}</th>
         <th> {{ trip[1] }}</th>
         <th> {{ trip[2] }}</th>
@@ -61,10 +63,10 @@
         <th> {{ trip[5] }}</th>
         <th> {{ trip[6] }}</th>
         <th> {{ trip[7] }}</th>
+    </tr>
 
 
         {% endfor %}
-    </tr>
     </tbody>
 </table>
 <br>
@@ -83,16 +85,17 @@
     </thead>
 
     <tbody>
-    <tr>
         {% for x in sf %}
+            <tr>
+
         <th> {{ x[0] }}</th>
         <th> {{ x[1] }}</th>
         <th> {{ x[2] }}</th>
         <th> {{ x[3] }}</th>
 
+    </tr>
 
         {% endfor %}
-    </tr>
     </tbody>
 </table>
 

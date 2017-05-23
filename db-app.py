@@ -233,7 +233,7 @@ def purchase_act():
             #update seats_free for each segment!
             decrease_seats_free(train_id,trip_date,trip_start,trip_end,tickets)
 
-        return "Purchsed Template"
+        return "Purchased!"
     return "Oops you can't access this page"
 
 
@@ -241,7 +241,8 @@ def purchase_act():
 def tables():
     all_passengers = get_passengers_table()
     trips = get_trips_table()
-    seats_free = get_seats_free()
+    seats_free = get_all_seats_free()
+    print ("Seats free-----", seats_free)
     return render_template('tables.html', passengers = all_passengers, trips = trips, sf = seats_free)
 
 if __name__ == "__main__":

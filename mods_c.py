@@ -24,7 +24,7 @@ def get_trips_table():
     return  cursor.fetchall()
 
 
-def get_seats_free():
+def get_all_seats_free():
     db = sqlite3.connect('rail.db')
     cursor = db.cursor()
     cursor.execute('select * from seats_free')
