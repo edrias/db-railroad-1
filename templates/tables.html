@@ -8,6 +8,8 @@
     <thead>
     <tr>
         <th>passenger_id varchar(40)</th>
+        <th>fname varchar(40)</th>
+
         <th>lname varchar(40)</th>
         <th>email varchar(40)</th>
         <th>billing_addr text</th>
@@ -18,17 +20,19 @@
     </thead>
 
     <tbody>
-        {% for passenger in passengers %}
-            <tr>
+    {% for passenger in passengers %}
+    <tr>
 
         <th> {{ passenger[0] }}</th>
         <th> {{ passenger[1] }}</th>
+
         <th> {{ passenger[2] }}</th>
         <th> {{ passenger[3] }}</th>
         <th> {{ passenger[4] }}</th>
+        <th> {{ passenger[5] }}</th>
     </tr>
 
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 
@@ -38,14 +42,16 @@
 <table class="bordered">
     <thead>
     <tr>
-        <th>trip_id</th>
-        <th>trip_date</th>
+        <th>trip_id- INTEGER</th>
+        <th>trip_date -date</th>
+        <th>trip_time -TIME</th>
+
         <th>trip_start FK(segments segment_id)</th>
-        <th>trip_end</th>
+        <th>trip_end FK(segments segment_id)</th>
         <th> train_id FK(train_num)</th>
         <th>passenger_id (FK passengers passenger_id)</th>
-        <th>trip_fare</th>
-        <th>payment_method</th>
+        <th>trip_fare -decimal(7,2)</th>
+        <th>payment_method boolean</th>
 
 
     </tr>
@@ -53,8 +59,8 @@
 
     <tbody>
 
-        {% for trip in trips %}
-        <tr>
+    {% for trip in trips %}
+    <tr>
         <th> {{ trip[0] }}</th>
         <th> {{ trip[1] }}</th>
         <th> {{ trip[2] }}</th>
@@ -66,7 +72,7 @@
     </tr>
 
 
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 <br>
@@ -85,8 +91,8 @@
     </thead>
 
     <tbody>
-        {% for x in sf %}
-            <tr>
+    {% for x in sf %}
+    <tr>
 
         <th> {{ x[0] }}</th>
         <th> {{ x[1] }}</th>
@@ -95,7 +101,7 @@
 
     </tr>
 
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 
