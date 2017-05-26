@@ -233,7 +233,7 @@ def purchase_act():
             #update seats_free for each segment!
             decrease_seats_free(train_id,trip_date,trip_start,trip_end,tickets)
 
-        return "Purchased!"
+        return render_template('purchased.html')
     return "Oops you can't access this page"
 
 
