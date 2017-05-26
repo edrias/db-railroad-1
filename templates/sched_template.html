@@ -3,8 +3,12 @@
 
 {% block main %}
 
+{% if direction == '1' %}
 
-<h2> {{ direction }} Train schedule </h2>
+<h2> Northbound Train Schedule </h2>
+{% else %}
+<h2> Southbound Train Schedule </h2>
+{% endif %}
 <table class="bordered">
     <thead>
     <tr>
