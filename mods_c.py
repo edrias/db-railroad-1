@@ -211,7 +211,7 @@ def get_time_by_station(station_id,train_id_weekday_start,train_id_weekday_end,t
     cursor = db.cursor()
     station_name = cursor.execute("SELECT station_name FROM stations WHERE station_id ='{}'".format(station_id)).fetchone()
     weekday = cursor.execute("SELECT time_out FROM stops_at WHERE station_id = '{}' and train_id BETWEEN '{}' AND '{}'".format(station_id,train_id_weekday_start,train_id_weekday_end)).fetchall()
-    weekend = cursor.execute("SELECT time_out FROM stops_at WHERE station_id = '{}' and train_id BETWEEN '{}' and '{}'".format(station_id,31,35)).fetchall()
+    weekend = cursor.execute("SELECT time_out FROM stops_at WHERE station_id = '{}' and train_id BETWEEN '{}' and '{}'".format(station_id,train_id_weeknd_start,train_id_weeknd_end)).fetchall()
     weekday1 = []
     weekend1 = []
 
@@ -223,10 +223,12 @@ def get_time_by_station(station_id,train_id_weekday_start,train_id_weekday_end,t
     for x in range(len(weekend)):
         weekend1.append(weekend[x][0])
 
+    print(weekday1)
+    print(weekend1)
 
     all_days = weekday1 + weekend1
 
-    return all_days 
+    return all_days
 
 def get_day_of_week(train_num):
     db = sqlite3.connect('rail.db')
@@ -249,4 +251,4 @@ def get_day_of_week(train_num):
 #print(index)#
 #print(get_time_by_station(1))
 #print(get_day_of_week(1))
-print(get_time_by_station(35,13,24,31,35))
+print(get_time_by_station(1,1,12,25,35))
