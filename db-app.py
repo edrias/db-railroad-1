@@ -26,7 +26,6 @@ class result:
 def main():
     return render_template('index.html')
 
-
 @app.route('/one-way/')
 def one_way():
     stations = get_stations()
@@ -80,6 +79,7 @@ def one_way_act():
         # if TRIP is found from query, change trip found to TRUE
         return render_template('results.html', found = trip_found, results = results, roundtrip = False)
     return "Oops you can't access this page"
+
 
 #checks if index is none and increments accordingly if not none
 def generate_result_id(index):
@@ -236,6 +236,20 @@ def purchase_act():
         return "Purchased!"
     return "Oops you can't access this page"
 
+
+@app.route('/north-sched')
+def north_sched():
+    direction = 1
+    trains = []  # list of tuples, holding train number, train direction
+    station_times = []  # w.e said about the list of 18 pieces list
+    return render_template('sched_template.html',direction = direction, trains = trains, stationtimes = station_times)
+
+@app.route('/south-sched')
+def south_sched():
+    direction = 0
+    trains = [] # list of tuples, holding train number, train direction
+    station_times=[] #w.e said about the list of 18 pieces list
+    return render_template('sched_template.html',direction = direction, trains = trains, stationtimes = station_times)
 
 @app.route('/tables')
 def tables():
