@@ -3,7 +3,7 @@
 
 {% block main %}
 
-{% if direction == '1' %}
+{% if direction == 1 %}
 
 <h2> Northbound Train Schedule </h2>
 {% else %}
@@ -12,7 +12,7 @@
 <table class="bordered">
     <thead>
     <tr>
-        <th> stations</th>
+        <th> Train</th>
         {% for train in trains%}
 
         <th> {{ train[0] }}</th>
@@ -22,35 +22,41 @@
 
     <tbody>
     <tr>
+        <th>Day</th>
          {% for train in trains %}
+            {% if train[1] == 1 %}
+        <th> mon-fri</th>
+            {% elif train[1] == 0 %}
+        <th> sat-sun</th>
+            {% endif %}
 
-        <th> {{ train[1] }}</th>
         {% endfor %}
     </tr>
+    <!-- <th>Station</th> -->
     <tr>
         {% for station in stationtimes %}
-        <th> station[0]</th>
-        <th> station[1]</th>
-        <th> station[2]</th>
-        <th> station[3]</th>
-        <th> station[4]</th>
-        <th> station[5]</th>
+        <th> {{station[0]}}</th>
+        <th> {{station[1]}}</th>
+        <th> {{station[2]}}</th>
+        <th> {{station[3]}}</th>
+        <th> {{station[4]}}</th>
+        <th> {{station[5]}}</th>
 
-        <th> station[6]</th>
-        <th> station[7]</th>
-        <th> station[8]</th>
-        <th> station[9]</th>
-        <th> station[10]</th>
-        <th> station[11]</th>
-        <th> station[12]</th>
-        <th> station[13]</th>
-        <th> station[14]</th>
-        <th> station[15]</th>
-        <th> station[16]</th>
-        <th> station[17]</th>
+        <th> {{station[6]}}</th>
+        <th> {{station[7]}}</th>
+        <th> {{station[8]}}</th>
+        <th> {{station[9]}}</th>
+        <th> {{station[10]}}</th>
+        <th> {{station[11]}}</th>
+        <th> {{station[12]}}</th>
+        <th> {{station[13]}}</th>
+        <th> {{station[14]}}</th>
+        <th> {{station[15]}}</th>
+        <th> {{station[16]}}</th>
+        <th> {{station[17]}}</th>
         {% if direction == "0" %}
 
-        <th> station[18]</th>
+        <th> {{station[18]}}</th>
 
         {% endif %}
 

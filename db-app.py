@@ -239,9 +239,39 @@ def purchase_act():
 
 @app.route('/north-sched')
 def north_sched():
+    #17 northbound trains.
     direction = 1
-    trains = []  # list of tuples, holding train number, train direction
+    trains = []  # list of tuples, holding train number, train day
     station_times = []  # w.e said about the list of 18 pieces list
+
+    #get trains 13-24
+    for x in range(13,25):
+        trains.append((x,get_day_of_week(x)[0]))
+        #for y in range(36,0,-1):
+            #station_times.append((get_station_names(y)[0],get_time_by_station(y)))
+
+    #get trains 31-35
+    for x in range(31,36):
+        trains.append((x,get_day_of_week(x)[0]))
+
+    for x in range(35,0,-1):
+        #station = get_station_names(x)[0]
+        times = get_time_by_station(x,13,24,31,35)
+        station_times.append((get_time_by_station(x,13,24,31,35)))
+        #for y in range(len(times)):
+            #station_times.append(times[y])
+       #station_times.append((get_station_names(x)[0],get_time_by_station(x,13,24,31,35)))
+
+    print(trains)
+    print(station_times)
+    #for x in range(1,35):
+    #    station_times.append((1,'5:30','6:40'))
+    #for x in range(35,0,-1):
+    #    print(x)
+    #    station_times.append((get_station_names(x)[0],get_time_by_station((35- x +1),13)[0]))
+
+    print(station_times)
+
     return render_template('sched_template.html',direction = direction, trains = trains, stationtimes = station_times)
 
 @app.route('/south-sched')

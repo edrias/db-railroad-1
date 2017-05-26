@@ -1,6 +1,7 @@
 import sqlite3
 import datetime
 import datetime as dt
+from ast import literal_eval
 
 def get_stations():
     db = sqlite3.connect('rail.db')
@@ -179,6 +180,61 @@ def get_passenger_id(email):
     cursor.execute("SELECT passenger_id FROM passengers WHERE email = '{}'".format(email))
     return cursor.fetchone()
 
+#get station names
+def get_station_names(station_id):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT station_name FROM stations WHERE station_id = '{}'".format(station_id))
+    return cursor.fetchone()
+
+#get times for each train number based on direction.
+def get_train_by_direction(train_direction):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT train_num FROM trains WHERE train_direction ='{}'".format(train_direction))
+    return cursor.fetchall()
+
+def get_times_by_train_id(train_id):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT time_out FROM stops_at WHERE train_id = '{}'".format(train_id))
+    return cursor.fetchall()
+
+def get_days_from_train_in(train_id):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT day FROM trains WHERE train_id = '{}'".format(train_id))
+    return cursor.fetchall()
+
+def get_time_by_station(station_id,train_id_weekday_start,train_id_weekday_end,train_id_weeknd_start,train_id_weeknd_end):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    station_name = cursor.execute("SELECT station_name FROM stations WHERE station_id ='{}'".format(station_id)).fetchone()
+    weekday = cursor.execute("SELECT time_out FROM stops_at WHERE station_id = '{}' and train_id BETWEEN '{}' AND '{}'".format(station_id,train_id_weekday_start,train_id_weekday_end)).fetchall()
+    weekend = cursor.execute("SELECT time_out FROM stops_at WHERE station_id = '{}' and train_id BETWEEN '{}' and '{}'".format(station_id,31,35)).fetchall()
+    weekday1 = []
+    weekend1 = []
+
+    for y in range(1):
+        weekday1.append(station_name[0])
+        for x in range(len(weekday)):
+            weekday1.append(weekday[x][0])
+
+    for x in range(len(weekend)):
+        weekend1.append(weekend[x][0])
+
+
+    all_days = weekday1 + weekend1
+
+    return all_days 
+
+def get_day_of_week(train_num):
+    db = sqlite3.connect('rail.db')
+    cursor = db.cursor()
+    cursor.execute("SELECT day FROM trains WHERE train_num ='{}'".format(train_num))
+    return cursor.fetchone()
+
+
 
 
     #Some tests:
@@ -190,4 +246,7 @@ def get_passenger_id(email):
 #insert_trips('2017-05-01',1,2,1,1,10.00,'0')
 #decrease_seats_free(1,'2017-05-01',5,1,4)
 #index = get_max_result_id()[0]
-#print(index)
+#print(index)#
+#print(get_time_by_station(1))
+#print(get_day_of_week(1))
+print(get_time_by_station(35,13,24,31,35))
